@@ -1,0 +1,47 @@
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        
+        System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount: ");
+        System.out.println("[1] Regular");
+        System.out.println("[2] Student");
+        System.out.println("[3] Senior Citizen");
+        System.out.println("[4] PWD");
+         System.out.print("Classification: ");
+        String choice = sc.nextLine();
+        
+        Passenger passenger;
+        
+        if(choice.equalsIgnoreCase("Regular")){
+            passenger = new Passenger.PassengerBuilder()
+                        .setPassengerCategory("Regular")
+                        .setDiscountRate(0.0)
+                        .build();
+        }else if (choice.equalsIgnoreCase("Student")){
+            passenger = new Passenger.PassengerBuilder()
+                        .setPassengerCategory("Student")
+                        .setDiscountRate(0.20)
+                        .build();
+        }else if(choice.equalsIgnoreCase("PWD") || choice.equalsIgnoreCase("Senior")){
+            passenger = new Passenger.PassengerBuilder()
+                        .setPassengerCategory("PWD/Senior")
+                        .setDiscountRate(0.20)
+                        .build();
+        }else{
+        System.out.println("Invalid classification.");
+        return;
+        }
+        
+        System.out.println("\n----- Classification Summary -----");
+        System.out.println("Passenger Category: " + passenger.getPassengerCategory());
+        System.out.println("Discount Rate: " + (passenger.getDiscountRate() * 100) + "%");
+        System.out.println("----------------------------------");
+        
+        System.out.print("Classification verified. The fare discount has been applied to your ticket." +"\nPress [1] to proceed to registration: ");
+        int proceed = sc.nextInt();
+        
+        sc.close();
+    }
+}
