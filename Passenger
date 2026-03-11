@@ -1,0 +1,35 @@
+public class Passenger{
+    private final String PASSENGER_CATEGORY;
+    private final double DISCOUNT_RATE;
+    
+    private Passenger(PassengerBuilder builder){
+        this.PASSENGER_CATEGORY = builder.passengerCategory;
+        this.DISCOUNT_RATE = builder.discountRate;
+    }
+    
+    public String getPassengerCategory(){
+        return PASSENGER_CATEGORY;
+    }
+    public double getDiscountRate(){
+        return DISCOUNT_RATE;
+    }
+    
+    public static class PassengerBuilder{
+        private String passengerCategory;
+        private double discountRate;
+        
+        public PassengerBuilder setPassengerCategory(String passengerCategory){
+            this.passengerCategory = passengerCategory;
+            return this;
+        }
+        
+        public PassengerBuilder setDiscountRate(double discountRate){
+            this.discountRate = discountRate;
+            return this;
+        }
+        
+        public Passenger build(){
+            return new Passenger(this);
+        }
+    }
+}
