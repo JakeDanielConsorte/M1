@@ -39,9 +39,9 @@ public class Passenger {
                     .build();
 
         }else{
-            System.out.println("Invalid. Please choose a valid classification from the list provided.");
             return null;
         }
+
         return passenger;
     }
 
