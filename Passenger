@@ -1,33 +1,65 @@
-public class Passenger{
+public class Passenger {
+
     private final String PASSENGER_CATEGORY;
     private final double DISCOUNT_RATE;
-    
+
     private Passenger(PassengerBuilder builder){
         this.PASSENGER_CATEGORY = builder.passengerCategory;
         this.DISCOUNT_RATE = builder.discountRate;
     }
-    
+
     public String getPassengerCategory(){
         return PASSENGER_CATEGORY;
     }
+
     public double getDiscountRate(){
         return DISCOUNT_RATE;
     }
-    
+
+    public static Passenger checkStatus(String choice){
+
+        Passenger passenger;
+
+        if(choice.equalsIgnoreCase("Regular")){
+            passenger = new PassengerBuilder()
+                    .setPassengerCategory("Regular")
+                    .setDiscountRate(0.0)
+                    .build();
+
+        }else if(choice.equalsIgnoreCase("Student")){
+            passenger = new PassengerBuilder()
+                    .setPassengerCategory("Student")
+                    .setDiscountRate(0.20)
+                    .build();
+
+        }else if(choice.equalsIgnoreCase("PWD") || choice.equalsIgnoreCase("Senior")){
+            passenger = new PassengerBuilder()
+                    .setPassengerCategory("PWD/Senior")
+                    .setDiscountRate(0.20)
+                    .build();
+
+        }else{
+            System.out.println("Invalid. Please choose a valid classification from the list provided.");
+            return null;
+        }
+        return passenger;
+    }
+
     public static class PassengerBuilder{
+
         private String passengerCategory;
         private double discountRate;
-        
+
         public PassengerBuilder setPassengerCategory(String passengerCategory){
             this.passengerCategory = passengerCategory;
             return this;
         }
-        
+
         public PassengerBuilder setDiscountRate(double discountRate){
             this.discountRate = discountRate;
             return this;
         }
-        
+
         public Passenger build(){
             return new Passenger(this);
         }
