@@ -36,6 +36,7 @@ public class Main {
                 System.out.println("Invalid. Please choose a valid classification from the list provided.");
             }
         }
+        //Put fillupRegistration here
         sc.close();
     }
 }
