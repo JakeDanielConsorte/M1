@@ -1,0 +1,146 @@
+import java.util.Scanner;
+
+public class Route {
+
+    private final String originStation;
+    private final String destinationStation;
+    private final String departureTime;
+
+    private Route(RouteBuilder builder) {
+        this.originStation = builder.originStation;
+        this.destinationStation = builder.destinationStation;
+        this.departureTime = builder.departureTime;
+    }
+
+    public String getOriginStation() { return originStation; }
+    public String getDestinationStation() { return destinationStation; }
+    public String getDepartureTime() { return departureTime; }
+
+    public static Route selectRoute() {
+        Scanner scanner = new Scanner(System.in);
+        String[] stations = { "Monumento", "5th Avenue", "R. Papa", "Abad Santos", "Blumentritt" };
+
+        String origin = chooseStation(scanner, stations, "Select Origin Station:", null);
+        String destination = chooseStation(scanner, stations, "Select Destination Station:", origin);
+        String departureTime = getDepartureTime(origin, destination);
+
+        return new RouteBuilder()
+                .setOriginStation(origin)
+                .setDestinationStation(destination)
+                .setDepartureTime(departureTime)
+                .build();
+    }
+
+    private static String chooseStation(Scanner scanner, String[] stations, String prompt, String exclude) {
+
+    while (true) {
+
+        System.out.println("\nTrain Station Hub");
+        System.out.println("===================");
+
+        if (exclude != null) {
+            System.out.println("Origin: " + exclude);
+        }
+
+        for (String s : stations) {
+            if (exclude == null || !s.equals(exclude)) {
+                System.out.println("- " + s);
+            }
+        }
+
+        System.out.print(prompt + " ");
+        String input = scanner.nextLine().trim();
+
+        boolean found = false;
+
+        for (String station : stations) {
+
+            if (station.equals(input)) {
+                found = true;
+
+                if (exclude != null && station.equals(exclude)) {
+                    System.out.println("Invalid selection. Your destination cannot be the same as your origin station.");
+                    break;
+                }
+
+                if (exclude != null) {
+                    System.out.print("Trip successfully selected! To confirm and continue, please type 1: ");
+                    int confirm = 0;
+                    
+                     while(confirm != 1){
+                        System.out.print("\nPress [1] to proceed to registration: ");
+                        if(scanner.hasNextInt()){
+                            confirm = scanner.nextInt();
+                            if(confirm != 1){
+                                 System.out.print("Invalid input. Please press 1 to continue.\n");
+                            }
+                        } else {
+                            System.out.print("Invalid input. Please press 1 to continue.\n");
+                            scanner.next();
+                        }
+                    }
+                     System.out.println("Checking train availability for the selected route and departure time...");
+                }
+                return station;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Invalid input. Please type the station name exactly as shown.");
+        }
+    }
+}
+
+    private static String getDepartureTime(String origin, String destination) {
+
+        String[][] times = {
+            { "", "6:30 AM", "8:30 AM", "12:00 PM", "3:00 PM" },
+            { "7:30 AM", "", "10:00 AM", "1:30 PM", "4:00 PM" },
+            { "6:00 AM", "11:00 AM", "", "1:00 PM", "3:30 PM" },
+            { "7:00 AM", "10:30 AM", "2:30 PM", "", "3:30 PM" },
+            { "9:30 AM", "12:30 PM", "2:00 PM", "4:30 PM", "" }
+        };
+
+        String[] stations = { "Monumento", "5th Avenue", "R. Papa", "Abad Santos", "Blumentritt" };
+
+        int originIndex = -1;
+        int destIndex = -1;
+
+        for (int i = 0; i < stations.length; i++) {
+            if (stations[i].equalsIgnoreCase(origin)) originIndex = i;
+            if (stations[i].equalsIgnoreCase(destination)) destIndex = i;
+        }
+
+        if (originIndex != -1 && destIndex != -1) {
+            return times[originIndex][destIndex];
+        }
+
+        return "N/A";
+    }
+
+    public static class RouteBuilder {
+
+        private String originStation;
+        private String destinationStation;
+        private String departureTime;
+
+        public RouteBuilder setOriginStation(String originStation) {
+            this.originStation = originStation;
+            return this;
+        }
+
+        public RouteBuilder setDestinationStation(String destinationStation) {
+            this.destinationStation = destinationStation;
+            return this;
+        }
+
+        public RouteBuilder setDepartureTime(String departureTime) {
+            this.departureTime = departureTime;
+            return this;
+        }
+
+        public Route build() {
+            return new Route(this);
+        }
+    }
+}
