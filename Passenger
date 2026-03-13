@@ -1,25 +1,34 @@
+import java.util.Scanner;
+
 public class Passenger {
-
-    private final String PASSENGER_CATEGORY;
+//attributes
+    private final String PASSENGER_CATEGORY, FULLNAME, CONTACT_NUMBER;
     private final double DISCOUNT_RATE;
-
+//constructor
     private Passenger(PassengerBuilder builder){
         this.PASSENGER_CATEGORY = builder.passengerCategory;
         this.DISCOUNT_RATE = builder.discountRate;
+        this.FULLNAME = builder.fullname;
+        this.CONTACT_NUMBER = builder.contactNumber;
     }
-
-    public String getPassengerCategory(){
-        return PASSENGER_CATEGORY;
-    }
-
-    public double getDiscountRate(){
-        return DISCOUNT_RATE;
-    }
-
-    public static Passenger checkStatus(String choice){
-
-        Passenger passenger;
-
+//getters
+    public String getPassengerCategory(){return PASSENGER_CATEGORY;}
+    public double getDiscountRate(){return DISCOUNT_RATE;}
+    public String getFullname(){return FULLNAME;} 
+    public String getContactNumber(){return CONTACT_NUMBER;}
+//checkStatus Feature
+    public static Passenger checkStatus(){
+        Scanner sc = new Scanner(System.in);
+        Passenger passenger = null;
+        
+        System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount: ");
+            System.out.println("[1] Regular");
+            System.out.println("[2] Student");
+            System.out.println("[3] Senior");
+            System.out.println("[4] PWD");
+            System.out.print("Classification: ");
+            String choice = sc.nextLine();
+            
         if(choice.equalsIgnoreCase("Regular")){
             passenger = new PassengerBuilder()
                     .setPassengerCategory("Regular")
@@ -39,15 +48,15 @@ public class Passenger {
                     .build();
 
         }else{
-            return null;
-        }
-
+           System.out.println("Invalid. Please choose a valid classification from the list provided.");;
+        } 
         return passenger;
     }
 
+//Builder Pattern    
     public static class PassengerBuilder{
 
-        private String passengerCategory;
+        private String passengerCategory, fullname, contactNumber;
         private double discountRate;
 
         public PassengerBuilder setPassengerCategory(String passengerCategory){
@@ -59,6 +68,17 @@ public class Passenger {
             this.discountRate = discountRate;
             return this;
         }
+        
+        public PassengerBuilder setFullname(String fullname){
+            this.fullname = fullname;
+            return this;
+        }
+        
+        public PassengerBuilder setContactNumber(String contactNumber){
+            this.contactNumber = contactNumber;
+            return this;
+        }
+        
 
         public Passenger build(){
             return new Passenger(this);
