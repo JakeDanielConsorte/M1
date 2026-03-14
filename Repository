@@ -1,0 +1,74 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Repository {
+    private final String dbURL;
+  
+    private Repository(String dbURL){
+        this.dbURL = dbURL;
+    }
+    public static boolean passengerExists(String name, String contact){
+        String url = "jdbc:sqlite:D:\\TrainHubStation.db";
+        String sql = "SELECT * FROM tbl_train WHERE fullname = ? OR contactNumber = ?";
+
+        try(Connection conn = DriverManager.getConnection(url);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, contact);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                return true; // passenger already exists
+            }
+
+        } catch(Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
+
+        return false;
+    }
+    public void savePassenger(Reservation reservation) {
+
+        String sql = "INSERT INTO tbl_train(fullname, contactNumber, PassengerCategory, discountRate, originStation, destinationStation, departureTime, reservationCode) VALUES (?, ?, ?, ?, ?, ?,?,?)";
+
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, reservation.getPassenger().getFullname());
+            pstmt.setString(2, reservation.getPassenger().getContactNumber());
+            pstmt.setString(3, reservation.getPassenger().getPassengerCategory());
+            pstmt.setDouble(4, reservation.getPassenger().getDiscountRate());
+            pstmt.setString(5, reservation.getRoute().getOriginStation());
+            pstmt.setString(6, reservation.getRoute().getDestinationStation());
+            pstmt.setString(7, reservation.getRoute().getDepartureTime());
+            pstmt.setString(8, reservation.getReservationCode());
+            
+            pstmt.executeUpdate();
+            System.out.println("Passenger saved successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Failed to save passenger: " + e.getMessage());
+        }
+    }
+    public static class RepositoryBuilder{
+        private String path;
+        
+        public RepositoryBuilder setDatabasePath(){
+            this.path = "jdbc:sqlite:D:\\TrainHubStation.db";
+            return this;
+        }
+        public Repository build() {
+            if (path == null) throw new IllegalStateException("Database path not set!");
+            return new Repository(path);
+        }
+    }
+   
+}
