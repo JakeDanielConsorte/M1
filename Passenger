@@ -16,41 +16,112 @@ public class Passenger {
     public double getDiscountRate(){return DISCOUNT_RATE;}
     public String getFullname(){return FULLNAME;} 
     public String getContactNumber(){return CONTACT_NUMBER;}
+    
 //checkStatus Feature
-    public static Passenger checkStatus(){
+     public static Passenger checkStatus() {
         Scanner sc = new Scanner(System.in);
         Passenger passenger = null;
-        
-        System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount: ");
+        int choice;
+
+        while (true) {
+            System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount:");
             System.out.println("[1] Regular");
             System.out.println("[2] Student");
             System.out.println("[3] Senior");
             System.out.println("[4] PWD");
-            System.out.print("Classification: ");
-            String choice = sc.nextLine();
-            
-        if(choice.equalsIgnoreCase("Regular")){
-            passenger = new PassengerBuilder()
-                    .setPassengerCategory("Regular")
-                    .setDiscountRate(0.0)
-                    .build();
+            System.out.print("Enter choice (1-4): ");
 
-        }else if(choice.equalsIgnoreCase("Student")){
-            passenger = new PassengerBuilder()
-                    .setPassengerCategory("Student")
-                    .setDiscountRate(0.20)
-                    .build();
+            if (sc.hasNextInt()) {
+                choice = sc.nextInt();
+                sc.nextLine(); // consume newline
 
-        }else if(choice.equalsIgnoreCase("PWD") || choice.equalsIgnoreCase("Senior")){
-            passenger = new PassengerBuilder()
-                    .setPassengerCategory("PWD/Senior")
-                    .setDiscountRate(0.20)
-                    .build();
+                String category;
+                double discount;
 
-        }else{
-           System.out.println("Invalid. Please choose a valid classification from the list provided.");;
-        } 
+                switch (choice) {
+                    case 1 -> {category = "Regular"; discount = 0.0; }
+                    case 2 -> { category = "Student"; discount = 0.20; }
+                    case 3 -> { category = "Senior Citizen"; discount = 0.30; }
+                    case 4 -> { category = "PWD"; discount = 0.25; }
+                    default -> {
+                        System.out.println("Invalid choice! Please enter 1-4.\n");
+                        continue; // ask again
+                    }
+                }
+                passenger = new PassengerBuilder()
+                        .setPassengerCategory(category)
+                        .setDiscountRate(discount)
+                        .build();
+                break; // valid selection
+            } else {
+                System.out.println("Invalid input! Please enter a number.\n");
+                sc.next(); // consume invalid token
+            }
+        }
+
+        System.out.println("Classification verified. The fare discount has been applied to your ticket.");
+        
+        int input = 0;
+            while(input != 1){
+                System.out.print("Press [1] to proceed to registration: ");
+                if(sc.hasNextInt()){
+                   input = sc.nextInt();
+                   if(input != 1){
+                       System.out.println("Invalid input. Please press 1 to continue.");
+                   }
+                } else {
+                    System.out.println("Invalid input. Please press 1 to continue.");
+                    sc.next();
+                }
+            }
         return passenger;
+    }
+     
+    //PUT fillUpRegistration HERE
+    public static Passenger fillUpRegistration(Passenger passenger){
+        
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("Let's get you registered! Please enter your full name and contact details to secure your reservation.");
+        
+        String name, contact;
+        
+        while(true){
+        System.out.print("Enter your Fullname: ");
+        name = sc.nextLine();
+
+        System.out.print("Enter your Contact Number: ");
+        contact = sc.nextLine();
+
+        if(Repository.passengerExists(name, contact)){
+            System.out.println("Passenger already exists in the database.");
+            System.out.println("Please enter a different name or contact number.\n");
+        }else{
+            break; // data is unique
+        }
+    }
+        
+        System.out.println("Registration successful! ");
+         int choice = 0; //LOOPING
+            while(choice != 1){
+                System.out.print("Press [1] to proceed to select route: ");
+                if(sc.hasNextInt()){
+                   choice = sc.nextInt();
+                   if(choice != 1){
+                       System.out.println("Invalid input. Please press 1 to continue.");
+                   }
+                } else {
+                    System.out.println("Invalid input. Please press 1 to continue.");
+                    sc.next();
+                }
+            }
+        
+        return new PassengerBuilder()
+                .setPassengerCategory(passenger.getPassengerCategory())
+                .setDiscountRate(passenger.getDiscountRate())
+                .setFullname(name)
+                .setContactNumber(contact)
+                .build();
     }
 
 //Builder Pattern    
@@ -78,7 +149,6 @@ public class Passenger {
             this.contactNumber = contactNumber;
             return this;
         }
-        
 
         public Passenger build(){
             return new Passenger(this);
