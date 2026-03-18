@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Reservation {
+    private final Scanner sc = new Scanner(System.in);
     private final String RESERVATION_CODE;
     private final Passenger passenger;
     private final Route route;
@@ -13,13 +14,13 @@ public class Reservation {
     }
     
     public void confirmReservation(){
-        Scanner sc = new Scanner(System.in);
-        int choice =0;
-        
+        int choice = 0;
+        System.out.printf("%40s%n", "CONFIRMATION");
+        System.out.println("------------------------------------------------------------------");
         System.out.println("Please confirm your reservation details to secure your train seat.");
         
          while(choice != 1){
-                System.out.print("Press [1] to confirm reservation: ");
+                System.out.print("\nPress [1] to confirm reservation: ");
                 
                 if(sc.hasNextInt()){
                    choice = sc.nextInt();
@@ -34,9 +35,19 @@ public class Reservation {
                 }
             }
          
-        System.out.println("Reservation confirmed. Your reservation reference number is " + generateReservationCode());
+        System.out.println("\nReservation confirmed! \nYour reference number: " + generateReservationCode());
+    }   
+    
+    public void cancelBeforeReservation(){
+        System.out.println("Do you want to cancel your reservation?");
+        System.out.print("Press [1] to cancel: ");
+        int choice = sc.nextInt();
         
-    }     
+        if(choice == 1){
+            System.out.println("Action successfully. You have canceled your reservation");
+        }
+    }
+    
     private String generateReservationCode(){
         Random rand = new Random();
         int num = rand.nextInt(100);
@@ -44,17 +55,22 @@ public class Reservation {
     }
      
      public void displaySummary(){
+         
         Reservation reserve = new Reservation.ReservationBuilder().setPassenger(passenger).setRoute(route).build();
+        
         reserve.getReservationCode();
         
-        System.out.println("\n===== RESERVATION SUMMARY =====");
-        System.out.println("Reservation Reference: " + reserve.getReservationCode());
-        System.out.println("Name: " + reserve.getPassenger().getFullname());
-        System.out.println("Category: " + reserve.getPassenger().getPassengerCategory());
-        System.out.println("Discount: " + reserve.getPassenger().getDiscountRate());
-        System.out.println("Origin: " + reserve.getRoute().getOriginStation());
-        System.out.println("Destination: " + reserve.getRoute().getDestinationStation());
-        System.out.println("Departure Time: " + reserve.getRoute().getDepartureTime());
+        System.out.println("RESERVATION SUMMARY");
+        System.out.println("========================================");
+        System.out.printf("%-18s : %s%n", "Full Name", reserve.getPassenger().getFullname());
+        System.out.printf("%-18s : %s%n", "Contact Number", reserve.getPassenger().getContactNumber());
+        System.out.printf("%-18s : %s%n", "Category", reserve.getPassenger().getPassengerCategory());
+        System.out.printf("%-18s : %s%n", "Discount", reserve.getPassenger().getDiscountRate());
+        System.out.println();
+        System.out.printf("%-18s : %s%n", "Origin", reserve.getRoute().getOriginStation());
+        System.out.printf("%-18s : %s%n", "Destination", reserve.getRoute().getDestinationStation());
+        System.out.printf("%-18s : %s%n", "Departure Time", reserve.getRoute().getDepartureTime());
+        System.out.println("========================================");
      }
      
      public String getReservationCode(){ return RESERVATION_CODE;}
@@ -79,7 +95,7 @@ public class Reservation {
         public Reservation build(){
             return new Reservation(this);
         }
-  }  
+    }    
 }
 
 
