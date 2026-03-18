@@ -3,22 +3,34 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        Reservation reserve = new Reservation.ReservationBuilder().build();
         
-        Passenger passenger = null;
-        while(passenger == null){
-            passenger = Passenger.checkStatus();
+        int choice = 0;
+        
+        while(choice != 1){
+            Passenger passenger = Passenger.fillUpRegistration();
+            passenger = Passenger.checkStatus(passenger);
+            Route route = Route.selectRoute();
+            
+            reserve = new Reservation.ReservationBuilder().setPassenger(passenger).setRoute(route).build();
+            reserve.displaySummary();
+            
+            System.out.println("\n[1] Confirm Reservation " + "\n[0] Cancels");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            
+            if(choice == 1){
+                reserve.confirmReservation();
+            }
+            
+            if(choice == 0){
+                reserve.cancelBeforeReservation();
+            }
         }
-        passenger = Passenger.fillUpRegistration(passenger);
-        
-        Route route = Route.selectRoute();
-        Reservation reserve = new Reservation.ReservationBuilder().setPassenger(passenger).setRoute(route).build();
         
         Repository repo = new Repository.RepositoryBuilder().setDatabasePath().build();
-        
-        reserve.displaySummary();
-        reserve.confirmReservation();
         repo.savePassenger(reserve);
-        
-        sc.close();
+       
+       sc.close();
     }
 }
