@@ -1,3 +1,5 @@
+package m1.m11;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -44,7 +46,7 @@ public class Reservation {
         int choice = sc.nextInt();
         
         if(choice == 1){
-            System.out.println("Action successfully. You have canceled your reservation");
+            System.out.println("\nAction successfully! \nYou have canceled your reservation.");
         }
     }
     
@@ -60,12 +62,12 @@ public class Reservation {
         
         reserve.getReservationCode();
         
-        System.out.println("RESERVATION SUMMARY");
+        System.out.println("\nRESERVATION SUMMARY");
         System.out.println("========================================");
         System.out.printf("%-18s : %s%n", "Full Name", reserve.getPassenger().getFullname());
         System.out.printf("%-18s : %s%n", "Contact Number", reserve.getPassenger().getContactNumber());
         System.out.printf("%-18s : %s%n", "Category", reserve.getPassenger().getPassengerCategory());
-        System.out.printf("%-18s : %s%n", "Discount", reserve.getPassenger().getDiscountRate());
+        System.out.printf("%-18s : %s%n", "Discount", reserve.getPassenger().getDiscountRate()* 100 + "%");
         System.out.println();
         System.out.printf("%-18s : %s%n", "Origin", reserve.getRoute().getOriginStation());
         System.out.printf("%-18s : %s%n", "Destination", reserve.getRoute().getDestinationStation());
