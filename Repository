@@ -3,8 +3,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Repository {
@@ -13,46 +11,55 @@ public class Repository {
     private Repository(String dbURL){
         this.dbURL = dbURL;
     }
-    public static boolean passengerExists(String name, String contact){
+    public static boolean passengerExists(String name, String contact, String emailAddress){
         String url = "jdbc:sqlite:D:\\TrainHubStation.db";
-        String sql = "SELECT * FROM tbl_train WHERE fullname = ? OR contactNumber = ?";
+        String sql = "SELECT * FROM tbl_train "
+                + "WHERE fullname = ? "
+                + "OR emailAddress = ?"
+                + "OR contactNumber = ?";
 
         try(Connection conn = DriverManager.getConnection(url);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
 
             pstmt.setString(1, name);
             pstmt.setString(2, contact);
+            pstmt.setString(3, emailAddress);
 
             ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
-                return true; // passenger already exists
+                return true; 
             }
 
         } catch(Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
-
         return false;
     }
+    
     public void savePassenger(Reservation reservation) {
 
-        String sql = "INSERT INTO tbl_train(fullname, contactNumber, PassengerCategory, discountRate, originStation, destinationStation, departureTime, reservationCode) VALUES (?, ?, ?, ?, ?, ?,?,?)";
+        String sql = "INSERT INTO tbl_train(fullname, contactNumber, emailAddress, PassengerCategory, discountRate, originStation, destinationStation, departureTime, reservationCode) VALUES (?,?, ?, ?, ?, ?, ?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(dbURL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, reservation.getPassenger().getFullname());
             pstmt.setString(2, reservation.getPassenger().getContactNumber());
-            pstmt.setString(3, reservation.getPassenger().getPassengerCategory());
-            pstmt.setDouble(4, reservation.getPassenger().getDiscountRate());
-            pstmt.setString(5, reservation.getRoute().getOriginStation());
-            pstmt.setString(6, reservation.getRoute().getDestinationStation());
-            pstmt.setString(7, reservation.getRoute().getDepartureTime());
-            pstmt.setString(8, reservation.getReservationCode());
+            pstmt.setString(3, reservation.getPassenger().getEmailAddress());
+            pstmt.setString(4, reservation.getPassenger().getPassengerCategory());
+            pstmt.setDouble(5, reservation.getPassenger().getDiscountRate());
+            pstmt.setString(6, reservation.getRoute().getOriginStation());
+            pstmt.setString(7, reservation.getRoute().getDestinationStation());
+            pstmt.setString(8, reservation.getRoute().getDepartureTime());
+            pstmt.setString(9, reservation.getReservationCode());
+            
             
             pstmt.executeUpdate();
-            System.out.println("Passenger saved successfully!");
+            System.out.println("\nPassenger saved successfully!");
+            System.out.println("------------------------------------------------------------------");
+            System.out.printf("%40s%n", "Thank you for using our service!");
+            System.out.println("------------------------------------------------------------------");
 
         } catch (SQLException e) {
             System.err.println("Failed to save passenger: " + e.getMessage());
