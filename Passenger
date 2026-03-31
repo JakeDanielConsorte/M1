@@ -1,6 +1,5 @@
-package com.mycompany.m1trainstationhub;
-
 import java.util.Scanner;
+
 public class Passenger {
     private final String PASSENGER_CATEGORY, FULLNAME, CONTACT_NUMBER, EMAIL_ADDRESS;
     private final double DISCOUNT_RATE;
