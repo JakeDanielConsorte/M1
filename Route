@@ -1,5 +1,3 @@
-package com.mycompany.m1trainstationhub;
-
 import java.util.Scanner;
 
 public class Route {
@@ -165,9 +163,16 @@ public class Route {
         int choice = 0;
         while (choice < 1 || choice > times.length) {
             System.out.print("Select time: ");
+
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
+
+                if (choice < 1 || choice > times.length) {
+                    System.out.println("\nInvalid input. Please select a valid number.\n");
+                }
+
             } else {
+                System.out.println("\nInvalid input. Please enter a number.\n");
                 scanner.next();
             }
         }
