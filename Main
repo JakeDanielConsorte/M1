@@ -1,3 +1,5 @@
+package com.mycompany.m1trainstationhub;
+
 import java.util.Scanner;
 
 public class Main {
