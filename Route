@@ -1,3 +1,5 @@
+package com.mycompany.m1trainstationhub;
+
 import java.util.Scanner;
 
 public class Route {
@@ -22,7 +24,7 @@ public class Route {
 
         String origin = chooseStation(scanner, stations, "Select Origin Station:", null);
         String destination = chooseStation(scanner, stations, "Select Destination Station:", origin);
-        String departureTime = getDepartureTime(origin, destination);
+        String departureTime = checkBoardingSchedule(scanner, origin, destination);
 
         return new RouteBuilder()
                 .setOriginStation(origin)
@@ -32,90 +34,146 @@ public class Route {
     }
 
     private static String chooseStation(Scanner scanner, String[] stations, String prompt, String exclude) {
+        while (true) {
+            System.out.println("\nTRAIN STATION HUB");
+            System.out.println("----------------------------------------");
 
-    while (true) {
-
-        System.out.println("\nTrain Station Hub");
-        System.out.println("===================");
-
-        if (exclude != null) {
-            System.out.println("Origin: " + exclude);
-        }
-
-        for (String s : stations) {
-            if (exclude == null || !s.equals(exclude)) {
-                System.out.println("- " + s);
+            if (exclude != null) {
+                System.out.println("Origin: " + exclude);
             }
-        }
 
-        System.out.print(prompt + " ");
-        String input = scanner.nextLine().trim();
-
-        boolean found = false;
-
-        for (String station : stations) {
-
-            if (station.equals(input)) {
-                found = true;
-
-                if (exclude != null && station.equals(exclude)) {
-                    System.out.println("Invalid selection. Your destination cannot be the same as your origin station.");
-                    break;
+            for (int i = 0; i < stations.length; i++) {
+                if (exclude == null || !stations[i].equals(exclude)) {
+                    System.out.println("[" + (i + 1) + "] " + stations[i]);
                 }
+            }
 
-                if (exclude != null) {
-                    System.out.print("Trip successfully selected! To confirm and continue, please type 1: ");
-                    int confirm = 0;
-                    
-                     while(confirm != 1){
-                        System.out.print("\nPress [1] to proceed to registration: ");
-                        if(scanner.hasNextInt()){
-                            confirm = scanner.nextInt();
-                            if(confirm != 1){
-                                 System.out.print("Invalid input. Please press 1 to continue.\n");
-                            }
-                        } else {
+            System.out.print(prompt + " ");
+            int choice = -1;
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+                continue;
+            }
+
+            if (choice < 1 || choice > stations.length) {
+                System.out.println("Invalid selection. Please choose a number from the list.");
+                continue;
+            }
+
+            String selectedStation = stations[choice - 1];
+
+            if (exclude != null && selectedStation.equals(exclude)) {
+                System.out.println("\nInvalid selection. Your destination cannot be the same as your origin station.");
+                continue;
+            }
+
+            if (exclude != null) {
+                System.out.print("\nTrip successfully selected!");
+                int confirm = 0;
+                while (confirm != 1) {
+                    System.out.print("\nPress [1] to proceed to registration: ");
+                    if (scanner.hasNextInt()) {
+                        confirm = scanner.nextInt();
+                        scanner.nextLine();
+                        if (confirm != 1) {
                             System.out.print("Invalid input. Please press 1 to continue.\n");
-                            scanner.next();
                         }
+                    } else {
+                        System.out.print("Invalid input. Please press 1 to continue.\n");
+                        scanner.next();
                     }
-                     System.out.println("Checking train availability for the selected route and departure time...");
                 }
-                return station;
+                System.out.println("\nChecking train availability for the selected route and departure time...");
             }
-        }
 
-        if (!found) {
-            System.out.println("Invalid input. Please type the station name exactly as shown.");
+            return selectedStation;
         }
     }
-}
 
-    private static String getDepartureTime(String origin, String destination) {
+    private static String checkBoardingSchedule(Scanner scanner, String origin, String destination) {
+        String schedule = "";
 
-        String[][] times = {
-            { "", "6:30 AM", "8:30 AM", "12:00 PM", "3:00 PM" },
-            { "7:30 AM", "", "10:00 AM", "1:30 PM", "4:00 PM" },
-            { "6:00 AM", "11:00 AM", "", "1:00 PM", "3:30 PM" },
-            { "7:00 AM", "10:30 AM", "2:30 PM", "", "3:30 PM" },
-            { "9:30 AM", "12:30 PM", "2:00 PM", "4:30 PM", "" }
-        };
-
-        String[] stations = { "Monumento", "5th Avenue", "R. Papa", "Abad Santos", "Blumentritt" };
-
-        int originIndex = -1;
-        int destIndex = -1;
-
-        for (int i = 0; i < stations.length; i++) {
-            if (stations[i].equalsIgnoreCase(origin)) originIndex = i;
-            if (stations[i].equalsIgnoreCase(destination)) destIndex = i;
+        if (origin.equals("Monumento")) {
+            if (destination.equals("5th Avenue")) {
+                schedule = "6:30 AM, 1:30 PM, 7:30 PM";
+            } else if (destination.equals("R. Papa")) {
+                schedule = "8:30 AM, 3:00 PM, 8:00 PM";
+            } else if (destination.equals("Abad Santos")) {
+                schedule = "12:00 PM, 4:30 PM, 7:00 PM";
+            } else if (destination.equals("Blumentritt")) {
+                schedule = "3:00 PM, 5:00 PM, 9:00 PM";
+            }
+        } else if (origin.equals("5th Avenue")) {
+            if (destination.equals("Monumento")) {
+                schedule = "7:30 AM, 12:00 PM, 3:00 PM";
+            } else if (destination.equals("R. Papa")) {
+                schedule = "10:00 AM, 2:00 PM, 5:30 PM";
+            } else if (destination.equals("Abad Santos")) {
+                schedule = "1:30 PM, 6:30 PM, 8:30 PM";
+            } else if (destination.equals("Blumentritt")) {
+                schedule = "4:00 PM, 7:00 PM, 9:30 PM";
+            }
+        } else if (origin.equals("R. Papa")) {
+            if (destination.equals("Monumento")) {
+                schedule = "6:00 AM, 11:30 AM, 3:30 PM";
+            } else if (destination.equals("5th Avenue")) {
+                schedule = "11:00 AM, 2:30 PM, 5:00 PM";
+            } else if (destination.equals("Abad Santos")) {
+                schedule = "1:00 PM, 4:00 PM, 8:30 PM";
+            } else if (destination.equals("Blumentritt")) {
+                schedule = "3:30 PM, 6:30 PM, 10:00 PM";
+            }
+        } else if (origin.equals("Abad Santos")) {
+            if (destination.equals("Monumento")) {
+                schedule = "7:00 AM, 11:00 AM, 2:30 PM";
+            } else if (destination.equals("5th Avenue")) {
+                schedule = "10:30 AM, 12:30 PM, 3:00 PM";
+            } else if (destination.equals("R. Papa")) {
+                schedule = "2:30 PM, 5:30 PM, 8:30 PM";
+            } else if (destination.equals("Blumentritt")) {
+                schedule = "3:30 PM, 6:00 PM, 9:00 PM";
+            }
+        } else if (origin.equals("Blumentritt")) {
+            if (destination.equals("Monumento")) {
+                schedule = "9:30 AM, 12:30 PM, 3:30 PM";
+            } else if (destination.equals("5th Avenue")) {
+                schedule = "12:30 PM, 2:00 PM, 5:30 PM";
+            } else if (destination.equals("R. Papa")) {
+                schedule = "2:00 PM, 5:00 PM, 7:30 PM";
+            } else if (destination.equals("Abad Santos")) {
+                schedule = "4:30 PM, 6:30 PM, 8:00 PM";
+            }
         }
 
-        if (originIndex != -1 && destIndex != -1) {
-            return times[originIndex][destIndex];
+        System.out.println("\nBOARDING SCHEDULE");
+        System.out.println("----------------------------------------");
+        System.out.println("Origin: " + origin);
+        System.out.println("Destination: " + destination);
+        System.out.println("----------------------------------------");
+
+        String[] times = schedule.split(",");
+
+        System.out.println("Select Available Departure Times:");
+        for (int i = 0; i < times.length; i++) {
+            System.out.println("[" + (i + 1) + "] " + times[i].trim());
         }
 
-        return "N/A";
+        int choice = 0;
+        while (choice < 1 || choice > times.length) {
+            System.out.print("Select time: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+            } else {
+                scanner.next();
+            }
+        }
+
+        scanner.nextLine();
+        return times[choice - 1].trim();
     }
 
     public static class RouteBuilder {
