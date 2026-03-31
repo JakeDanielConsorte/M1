@@ -1,9 +1,10 @@
+package com.mycompany.m1trainstationhub;
+
 import java.util.Scanner;
 public class Passenger {
-//attributes
     private final String PASSENGER_CATEGORY, FULLNAME, CONTACT_NUMBER, EMAIL_ADDRESS;
     private final double DISCOUNT_RATE;
-//constructor
+    
     private Passenger(PassengerBuilder builder){
         this.PASSENGER_CATEGORY = builder.passengerCategory;
         this.DISCOUNT_RATE = builder.discountRate;
@@ -11,14 +12,12 @@ public class Passenger {
         this.CONTACT_NUMBER = builder.contactNumber;
         this.EMAIL_ADDRESS = builder.emailAddress;
     }
-//getters
+
     public String getPassengerCategory(){return PASSENGER_CATEGORY;}
     public double getDiscountRate(){return DISCOUNT_RATE;}
     public String getFullname(){return FULLNAME;} 
     public String getContactNumber(){return CONTACT_NUMBER;}
     public String getEmailAddress(){return EMAIL_ADDRESS;}
-     
-    //PUT fillUpRegistration HERE
 
     public static Passenger fillUpRegistration() {
 
@@ -27,7 +26,7 @@ public class Passenger {
     System.out.println("        TRAIN RESERVATION SYSTEM        ");
     System.out.println("========================================");
 
-    while (true) { // loop for redo
+    while (true) {
         System.out.println("\nREGISTRATION");
         System.out.println("----------------------------------------");
         System.out.println("Let's get you registered! Please enter your full name and contact details to secure your reservation.");
@@ -49,7 +48,6 @@ public class Passenger {
             }
         }
 
-        // EMAIL VALIDATION
         while (true) {
             System.out.print("Email Address    : ");
             emailAddress = sc.nextLine();
@@ -62,7 +60,6 @@ public class Passenger {
             }
         }
 
-        // CHECK IF PASSENGER EXISTS (after all inputs are valid)
         if (Repository.passengerExists(name, contact, emailAddress)) {
             System.out.println("\nPassenger already exists in the database.");
             System.out.println("Please enter different details.\n");
@@ -77,7 +74,7 @@ public class Passenger {
 
             if (sc.hasNextInt()) {
                 choice = sc.nextInt();
-                sc.nextLine(); // clear buffer
+                sc.nextLine();
 
                 if (choice == 1 || choice == 0) {
                     break;
@@ -86,7 +83,7 @@ public class Passenger {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                sc.next(); // clear invalid input
+                sc.next();
             }
         }
 
@@ -98,27 +95,27 @@ public class Passenger {
                     .build();
         }
 
-        // if choice == 0 → redo
         System.out.println("\nRedoing registration...\n");
     }
 }
-    //checkStatus Feature
+
         public static Passenger checkStatus(Passenger passenger) {
 
            Scanner sc = new Scanner(System.in);
 
-           while (true) { // LOOP FOR REDO
+           while (true) {
 
                int choice;
 
                while (true) {
                    System.out.println("\nPASSENGER CLASSIFICATION");
                    System.out.println("----------------------------------------");
+                   System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount.");
                    System.out.println("[1] Regular");
                    System.out.println("[2] Student (20%)");
                    System.out.println("[3] Senior (30%)");
                    System.out.println("[4] PWD (25%)");
-                   System.out.print("\nEnter choice: ");
+                   System.out.print("Enter choice: ");
 
                    if (sc.hasNextInt()) {
                        choice = sc.nextInt();
@@ -153,7 +150,7 @@ public class Passenger {
                    }
                }
 
-               System.out.println("\nClassification Applied!");
+               System.out.println("\nClassification verified!. The fare discount has been applied to your ticket. Press [1] to proceed to route selection.");
 
                int choice2;
                while (true) {
