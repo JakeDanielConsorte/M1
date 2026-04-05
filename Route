@@ -20,72 +20,95 @@ public class Route {
         Scanner scanner = new Scanner(System.in);
         String[] stations = { "Monumento", "5th Avenue", "R. Papa", "Abad Santos", "Blumentritt" };
 
-        String origin = chooseStation(scanner, stations, "Select Origin Station:", null);
-        String destination = chooseStation(scanner, stations, "Select Destination Station:", origin);
-        String departureTime = checkBoardingSchedule(scanner, origin, destination);
+        while (true) {
+            String origin = chooseStation(scanner, stations, "origin", null);
+            String destination = chooseStation(scanner, stations, "destination", origin);
 
-        return new RouteBuilder()
-                .setOriginStation(origin)
-                .setDestinationStation(destination)
-                .setDepartureTime(departureTime)
-                .build();
+            int choice = -1;
+            while (choice != 0 && choice != 1) {
+                System.out.println("\nSELECTED TRIP");
+                System.out.println("----------------------------------------");
+                System.out.println("Origin: " + origin);
+                System.out.println("Destination: " + destination);
+                System.out.println("----------------------------------------");
+
+                System.out.println("\nTrip successfully selected!");
+                System.out.println("\nEnter [1] to proceed to boarding schedule:");
+                System.out.println("\n[1] Confirm");
+                System.out.println("[0] Cancel");
+                System.out.print("\nEnter choice: ");
+
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (choice != 0 && choice != 1) {
+                        System.out.println("\nInvalid input. Please select a valid option.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a number only.");
+                    scanner.next();
+                }
+            }
+
+            if (choice == 1) {
+                System.out.println("\nChecking train availability for the selected route and departure time...");
+                String departureTime = checkBoardingSchedule(scanner, origin, destination);
+
+                return new RouteBuilder()
+                        .setOriginStation(origin)
+                        .setDestinationStation(destination)
+                        .setDepartureTime(departureTime)
+                        .build();
+            }
+
+            System.out.println("\nSelection cancelled! Restarting route selection...");
+        }
     }
 
-    private static String chooseStation(Scanner scanner, String[] stations, String prompt, String exclude) {
+    private static String chooseStation(Scanner scanner, String[] stations, String type, String exclude) {
         while (true) {
             System.out.println("\nTRAIN STATION HUB");
             System.out.println("----------------------------------------");
 
-            if (exclude != null) {
-                System.out.println("Origin: " + exclude);
+            if (type.equals("origin")) {
+                System.out.println("Please select your origin station below.\n");
+            } else {
+                System.out.println("Please select your destination station below.");
+                System.out.println("Origin: " + exclude + "\n");
             }
 
             for (int i = 0; i < stations.length; i++) {
-                if (exclude == null || !stations[i].equals(exclude)) {
-                    System.out.println("[" + (i + 1) + "] " + stations[i]);
-                }
+                System.out.println("[" + (i + 1) + "] " + stations[i]);
             }
 
-            System.out.print(prompt + " ");
-            int choice = -1;
+            if (type.equals("origin")) {
+                System.out.print("\nSelect origin station: ");
+            } else {
+                System.out.print("\nSelect destination station: ");
+            }
+
+            int choice;
+
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } else {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("\nInvalid input. Please enter a number only.");
                 scanner.next();
                 continue;
             }
 
             if (choice < 1 || choice > stations.length) {
-                System.out.println("Invalid selection. Please choose a number from the list.");
+                System.out.println("\nInvalid input. Please select a valid number.");
                 continue;
             }
 
             String selectedStation = stations[choice - 1];
 
             if (exclude != null && selectedStation.equals(exclude)) {
-                System.out.println("\nInvalid selection. Your destination cannot be the same as your origin station.");
+                System.out.println("\nInvalid selection. Destination cannot be the same as origin.");
                 continue;
-            }
-
-            if (exclude != null) {
-                System.out.print("\nTrip successfully selected!");
-                int confirm = 0;
-                while (confirm != 1) {
-                    System.out.print("\nPress [1] to proceed to registration: ");
-                    if (scanner.hasNextInt()) {
-                        confirm = scanner.nextInt();
-                        scanner.nextLine();
-                        if (confirm != 1) {
-                            System.out.print("Invalid input. Please press 1 to continue.\n");
-                        }
-                    } else {
-                        System.out.print("Invalid input. Please press 1 to continue.\n");
-                        scanner.next();
-                    }
-                }
-                System.out.println("\nChecking train availability for the selected route and departure time...");
             }
 
             return selectedStation;
@@ -147,32 +170,31 @@ public class Route {
             }
         }
 
-        System.out.println("\nBOARDING SCHEDULE");
-        System.out.println("----------------------------------------");
-        System.out.println("Origin: " + origin);
-        System.out.println("Destination: " + destination);
-        System.out.println("----------------------------------------");
-
         String[] times = schedule.split(",");
-
-        System.out.println("Select Available Departure Times:");
-        for (int i = 0; i < times.length; i++) {
-            System.out.println("[" + (i + 1) + "] " + times[i].trim());
-        }
-
         int choice = 0;
+
         while (choice < 1 || choice > times.length) {
-            System.out.print("Select time: ");
+            System.out.println("\nBOARDING SCHEDULE");
+            System.out.println("----------------------------------------");
+            System.out.println("Origin: " + origin);
+            System.out.println("Destination: " + destination);
+            System.out.println("----------------------------------------");
+
+            System.out.println("Select Available Departure Times:\n");
+            for (int i = 0; i < times.length; i++) {
+                System.out.println("[" + (i + 1) + "] " + times[i].trim());
+            }
+
+            System.out.print("\nSelect time: ");
 
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
 
                 if (choice < 1 || choice > times.length) {
-                    System.out.println("\nInvalid input. Please select a valid number.\n");
+                    System.out.println("\nInvalid input. Please select a valid number.");
                 }
-
             } else {
-                System.out.println("\nInvalid input. Please enter a number.\n");
+                System.out.println("\nInvalid input. Please enter a number only.");
                 scanner.next();
             }
         }
