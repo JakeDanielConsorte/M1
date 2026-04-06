@@ -11,30 +11,53 @@ public class Repository {
     private Repository(String dbURL){
         this.dbURL = dbURL;
     }
-    public static boolean passengerExists(String name, String contact, String emailAddress){
+    
+    public static String passengerExists(String name, String contact, String emailAddress){
         String url = "jdbc:sqlite:D:\\TrainHubStation.db";
-        String sql = "SELECT * FROM tbl_train "
-                + "WHERE fullname = ? "
-                + "OR emailAddress = ?"
-                + "OR contactNumber = ?";
 
-        try(Connection conn = DriverManager.getConnection(url);
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        boolean nameExists = false;
+        boolean contactExists = false;
+        boolean emailExists = false;
 
-            pstmt.setString(1, name);
-            pstmt.setString(2, contact);
-            pstmt.setString(3, emailAddress);
-
+        try(Connection conn = DriverManager.getConnection(url)){
+            String sql = "SELECT fullname, contactNumber, emailAddress FROM tbl_train";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
-            if(rs.next()){
-                return true; 
+            while(rs.next()){
+                if(rs.getString("fullname").equalsIgnoreCase(name)){
+                    nameExists = true;
+                }
+                if(rs.getString("contactNumber").equals(contact)){
+                    contactExists = true;
+                }
+                if(rs.getString("emailAddress").equalsIgnoreCase(emailAddress)){
+                    emailExists = true;
+                }
             }
 
         } catch(Exception e){
-            System.out.println("Database error: " + e.getMessage());
+            return "Database error: " + e.getMessage();
         }
-        return false;
+
+        // 
+        if(nameExists && contactExists && emailExists){
+            return "Name, Contact number, and Email address already exist!";
+        } else if(nameExists && contactExists){
+            return "Name and Contact number already exist!";
+        } else if(nameExists && emailExists){
+            return "Name and Email address already exist!";
+        } else if(contactExists && emailExists){
+            return "Contact number and Email address already exist!";
+        } else if(nameExists){
+            return "Name already exists!";
+        } else if(contactExists){
+            return "Contact already exists!";
+        } else if(emailExists){
+            return "Email already exists!";
+        }
+
+        return null;
     }
     
     public void savePassenger(Reservation reservation) {
@@ -57,9 +80,9 @@ public class Repository {
             
             pstmt.executeUpdate();
             System.out.println("\nPassenger saved successfully!");
-            System.out.println("------------------------------------------------------------------");
-            System.out.printf("%40s%n", "Thank you for using our service!");
-            System.out.println("------------------------------------------------------------------");
+            System.out.println("|****************************************************************|");
+            System.out.printf("%50s%n", "Thank you for using our service!");
+            System.out.println("|****************************************************************|");
 
         } catch (SQLException e) {
             System.err.println("Failed to save passenger: " + e.getMessage());
@@ -77,5 +100,4 @@ public class Repository {
             return new Repository(path);
         }
     }
-   
 }
