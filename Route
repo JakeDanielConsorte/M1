@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class Route {
-
     private final String originStation;
     private final String destinationStation;
     private final String departureTime;
@@ -26,27 +25,28 @@ public class Route {
 
             int choice = -1;
             while (choice != 0 && choice != 1) {
-                System.out.println("\nSELECTED TRIP");
-                System.out.println("----------------------------------------");
-                System.out.println("Origin: " + origin);
-                System.out.println("Destination: " + destination);
-                System.out.println("----------------------------------------");
+                System.out.println("\n===============================");
+                System.out.println("         SELECTED TRIP         ");
+                System.out.println("===============================");
+                System.out.println("ORIGIN: " + origin);
+                System.out.println("DESTINATION: " + destination);
+                System.out.println("===============================");
 
                 System.out.println("\nTrip successfully selected!");
                 System.out.println("\nEnter [1] to proceed to boarding schedule:");
-                System.out.println("\n[1] Confirm");
+                System.out.println("[1] Confirm");
                 System.out.println("[0] Cancel");
-                System.out.print("\nEnter choice: ");
+                System.out.print("Enter choice: ");
 
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
                     scanner.nextLine();
 
                     if (choice != 0 && choice != 1) {
-                        System.out.println("\nInvalid input. Please select a valid option.");
+                        System.out.println("\n*INVALID INPUT!* Please select a valid option.");
                     }
                 } else {
-                    System.out.println("Invalid input. Please enter a number only.");
+                    System.out.println("*INVALID INPUT!* Please enter a number.");
                     scanner.next();
                 }
             }
@@ -68,14 +68,15 @@ public class Route {
 
     private static String chooseStation(Scanner scanner, String[] stations, String type, String exclude) {
         while (true) {
-            System.out.println("\nTRAIN STATION HUB");
-            System.out.println("----------------------------------------");
+            System.out.println("\n=====================");
+            System.out.println("#  ROUTE SELECTION  #");
+            System.out.println("=====================");
 
             if (type.equals("origin")) {
-                System.out.println("Please select your origin station below.\n");
+                System.out.println("Please select your origin station below.");
             } else {
                 System.out.println("Please select your destination station below.");
-                System.out.println("Origin: " + exclude + "\n");
+                System.out.println("ORIGIN: " + exclude);
             }
 
             for (int i = 0; i < stations.length; i++) {
@@ -83,9 +84,9 @@ public class Route {
             }
 
             if (type.equals("origin")) {
-                System.out.print("\nSelect origin station: ");
+                System.out.print("Select Origin Station: ");
             } else {
-                System.out.print("\nSelect destination station: ");
+                System.out.print("Select Destination Station: ");
             }
 
             int choice;
@@ -94,20 +95,20 @@ public class Route {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } else {
-                System.out.println("\nInvalid input. Please enter a number only.");
+                System.out.println("\n*INVALID INPUT!* Please enter a number.");
                 scanner.next();
                 continue;
             }
 
             if (choice < 1 || choice > stations.length) {
-                System.out.println("\nInvalid input. Please select a valid number.");
+                System.out.println("\n*INVALID INPUT!* Please select a valid option.");
                 continue;
             }
 
             String selectedStation = stations[choice - 1];
 
             if (exclude != null && selectedStation.equals(exclude)) {
-                System.out.println("\nInvalid selection. Destination cannot be the same as origin.");
+                System.out.println("\n*INVALID SELECTION!* Destination cannot be the same as origin.");
                 continue;
             }
 
@@ -174,27 +175,28 @@ public class Route {
         int choice = 0;
 
         while (choice < 1 || choice > times.length) {
-            System.out.println("\nBOARDING SCHEDULE");
-            System.out.println("----------------------------------------");
-            System.out.println("Origin: " + origin);
-            System.out.println("Destination: " + destination);
-            System.out.println("----------------------------------------");
+            System.out.println("\n=============================");
+            System.out.println("      BOARDING SCHEDULE     ");
+            System.out.println("=============================");
+            System.out.println("ORIGIN: " + origin);
+            System.out.println("DESTINATION: " + destination);
+            System.out.println("=============================");
 
-            System.out.println("Select Available Departure Times:\n");
+            System.out.println("Select Available Departure Times: ");
             for (int i = 0; i < times.length; i++) {
                 System.out.println("[" + (i + 1) + "] " + times[i].trim());
             }
 
-            System.out.print("\nSelect time: ");
+            System.out.print("Select time: ");
 
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
 
                 if (choice < 1 || choice > times.length) {
-                    System.out.println("\nInvalid input. Please select a valid number.");
+                    System.out.println("\n*INVALID INPUT!* Please select a valid option.");
                 }
             } else {
-                System.out.println("\nInvalid input. Please enter a number only.");
+                System.out.println("\n*INVALID INPUT!* Please enter a number.");
                 scanner.next();
             }
         }
