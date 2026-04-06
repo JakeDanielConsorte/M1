@@ -3,41 +3,41 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        while (true) {
+        Reservation reserve = new Reservation.ReservationBuilder().build();
+        Repository repo = new Repository.RepositoryBuilder().setDatabasePath().build();
+        
+        int choice = 0;
+        
+        while(choice != 1){
             Passenger passenger = Passenger.fillUpRegistration();
             passenger = Passenger.checkStatus(passenger);
             Route route = Route.selectRoute();
-
-            Reservation reserve = new Reservation.ReservationBuilder()
-                    .setPassenger(passenger)
-                    .setRoute(route)
-                    .build();
-
+            
+            reserve = new Reservation.ReservationBuilder().setPassenger(passenger).setRoute(route).build();
+            
             System.out.println("\nPreparing your reservation summary...");
-
+            
             while (true) {
-                reserve.displaySummary();
+                reserve.confirmReservation();
                 System.out.println("\nYour reservation details are provided above.");
-                System.out.println("\nEnter 1 to confirm your reservation.");
-                System.out.println("\n[1] Confirm Reservation");
-                System.out.println("[0] Cancel");
-                System.out.print("\nEnter choice: ");
-
+                System.out.println("\nEnter [1] confirm reservation");
+                System.out.println("[1] Confirm \n[0] Cancel");
+                System.out.print("Enter Choice: ");
+                
                 if (sc.hasNextInt()) {
-                    int choice = sc.nextInt();
+                    int status = sc.nextInt();
                     sc.nextLine();
-
-                    if (choice == 1) {
-                        reserve.confirmReservation();
-                        Repository repo = new Repository.RepositoryBuilder().setDatabasePath().build();
+                    
+                    if (status == 1) {
+                        reserve.reservationConfirmed();
                         repo.savePassenger(reserve);
-                        sc.close();
                         return;
-                    } else if (choice == 0) {
-                        boolean cancelled = reserve.cancelBeforeReservation(sc);
-                        if (cancelled) {
-                            break;
+                    } else if (status == 0) {
+                        boolean isCancelled = reserve.cancelReservation();
+                        if (isCancelled) {
+                            break; //restart whole process
+                        } else {
+                            continue; //back to summary
                         }
                     } else {
                         System.out.println("\nInvalid input. Please enter a valid option.");
@@ -46,7 +46,8 @@ public class Main {
                     System.out.println("\nInvalid input. Please enter a number only.");
                     sc.next();
                 }
-            }
+            } 
         }
+       sc.close();
     }
 }
