@@ -22,15 +22,16 @@ public class Passenger {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("\n========================================");
-        System.out.println("        TRAIN RESERVATION SYSTEM        ");
+        System.out.println("#       TRAIN RESERVATION SYSTEM       #");
         System.out.println("========================================");
 
         String name = "", contact = "", emailAddress = "";
 
         while (true) {
-            System.out.println("\nREGISTRATION");
-            System.out.println("----------------------------------------");
-            System.out.println("Let's get you registered! Please enter your full name and contact details to secure your reservation.\n");
+            System.out.println("\n==========================");
+            System.out.println("#  FILL-UP REGISTRATION  #");
+            System.out.println("==========================");
+            System.out.println("Let's get you registered! Please enter your full name and contact details to secure your reservation.");
 
             System.out.print("Full name        : ");
             if (name.isEmpty()) {
@@ -39,8 +40,8 @@ public class Passenger {
                 System.out.println(name);
             }
 
-            if (!name.matches("[a-zA-Z\\s]+")) {
-                System.out.println("\nInvalid name. Please enter letters only.");
+            if (!name.matches("[a-zA-Z\\s.]+")) {
+                System.out.println("\n*INVALID INPUT!* Enter a letter only. Other characters are prohibited.");
                 name = "";
                 continue;
             }
@@ -53,7 +54,7 @@ public class Passenger {
             }
 
             if (!contact.matches("\\d{11}")) {
-                System.out.println("\nContact number must be exactly 11 digits.");
+                System.out.println("\n*INVALID INPUT!* Contact must be a number and exactly 11 digits.");
                 contact = "";
                 continue;
             }
@@ -66,26 +67,30 @@ public class Passenger {
             }
 
             if (!emailAddress.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-                System.out.println("\nInvalid email format.");
+                System.out.println("\n*INVALID INPUT!* Wrong email format.");
                 emailAddress = "";
                 continue;
             }
 
-            if (Repository.passengerExists(name, contact, emailAddress)) {
-                System.out.println("\nPassenger already exists in the database.");
-                System.out.println("Please enter different details.\n");
-                name = "";
-                contact = "";
-                emailAddress = "";
+            String error = Repository.passengerExists(name, contact, emailAddress);
+            if (error != null) {
+                System.out.println("\n*INVALID INPUT!* " + error);
+                System.out.println("Please enter a different details.");
+
+                // Reset only the fields that are wrong (optional but better UX)
+                if (error.contains("Name")) name = "";
+                if (error.contains("Contact")) contact = "";
+                if (error.contains("Email")) emailAddress = "";
+
                 continue;
             }
-
-            System.out.println("\nRegistration Successful!");
+            
+            System.out.println("\nREGISTRATION SUCCESSFUL!");
 
             int choice = -1;
             while (true) {
                 System.out.print("\nEnter [1] to continue to passenger selection.\n");
-                System.out.print("\n[1] Continue\n[0] Cancel\n\nEnter choice: ");
+                System.out.print("[1] Continue\n[0] Cancel\nEnter choice: ");
 
                 if (sc.hasNextInt()) {
                     choice = sc.nextInt();
@@ -94,10 +99,10 @@ public class Passenger {
                     if (choice == 1 || choice == 0) {
                         break;
                     } else {
-                        System.out.println("\nInvalid input. Please enter a valid option.");
+                        System.out.println("\n*INVALID INPUT!* Please enter a valid option.");
                     }
                 } else {
-                    System.out.println("\nInvalid input. Please enter a number only.");
+                    System.out.println("\n*INVALID INPUT!* Please enter a number only.");
                     sc.next();
                 }
             }
@@ -110,7 +115,7 @@ public class Passenger {
                         .build();
             }
 
-            System.out.println("\nRegistration cancelled! Restarting registration...");
+            System.out.println("\n*REGISTRATION CANCELLED! Restarting registration...*");
             name = "";
             contact = "";
             emailAddress = "";
@@ -126,14 +131,15 @@ public class Passenger {
             int choice;
 
             while (true) {
-                System.out.println("\nPASSENGER CLASSIFICATION");
-                System.out.println("----------------------------------------");
+                System.out.println("\n==============================");
+                System.out.println("#  PASSENGER CLASSIFICATION  #");
+                System.out.println("==============================");
                 System.out.println("Welcome! Please select your passenger category to see if you qualify for a fare discount.");
-                System.out.println("\n[1] Regular");
+                System.out.println("[1] Regular");
                 System.out.println("[2] Student (20%)");
                 System.out.println("[3] Senior (30%)");
                 System.out.println("[4] PWD (25%)");
-                System.out.print("\nEnter choice: ");
+                System.out.print("Enter choice: ");
 
                 if (sc.hasNextInt()) {
                     choice = sc.nextInt();
@@ -148,7 +154,7 @@ public class Passenger {
                         case 3 -> { category = "Senior"; discount = 0.30; }
                         case 4 -> { category = "PWD"; discount = 0.25; }
                         default -> {
-                            System.out.println("\nInvalid choice! Please select a valid option.");
+                            System.out.println("\n*INVALID INPUT!* Please select a valid option.");
                             continue;
                         }
                     }
@@ -163,16 +169,16 @@ public class Passenger {
 
                     break;
                 } else {
-                    System.out.println("\nInvalid input! Please enter a number.");
+                    System.out.println("\n*INVALID INPUT!* Please enter a number.");
                     sc.next();
                 }
             }
 
-            System.out.println("\nClassification verified!. The fare discount has been applied to your ticket.\n\nEnter [1] to proceed to route selection.");
+            System.out.println("\nCLASSIFICATION VERIFIED! The fare discount has been applied to your ticket.\n\nEnter [1] to proceed to route selection.");
 
             int choice2;
             while (true) {
-                System.out.print("\n[1] Confirm\n[0] Cancel\n\nEnter choice: ");
+                System.out.print("[1] Confirm\n[0] Cancel\nEnter choice: ");
 
                 if (sc.hasNextInt()) {
                     choice2 = sc.nextInt();
@@ -181,13 +187,13 @@ public class Passenger {
                     if (choice2 == 1) {
                         return passenger;
                     } else if (choice2 == 0) {
-                        System.out.println("\nClassification cancelled! Restarting classification...");
+                        System.out.println("\nCLASSIFICATION CANCELLED! Restarting classification...");
                         break;
                     } else {
-                        System.out.println("\nInvalid input. Please enter a valid option.");
+                        System.out.println("\n*INVALID INPUT!*! Please enter a valid option.");
                     }
                 } else {
-                    System.out.println("\nInvalid input. Please enter a number only.");
+                    System.out.println("\n*INVALID INPUT!* Please enter a number only.");
                     sc.next();
                 }
             }
