@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Route {
+
     private final String originStation;
     private final String destinationStation;
     private final String departureTime;
