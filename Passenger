@@ -85,7 +85,7 @@ public class Passenger {
                 continue;
             }
             
-            System.out.println("\nREGISTRATION SUCCESSFUL!");
+            System.out.println("\n*REGISTRATION SUCCESSFUL!*");
 
             int choice = -1;
             while (true) {
@@ -115,7 +115,7 @@ public class Passenger {
                         .build();
             }
 
-            System.out.println("\n*REGISTRATION CANCELLED! Restarting registration...*");
+            System.out.println("\n*REGISTRATION CANCELLED!* Restarting registration...*");
             name = "";
             contact = "";
             emailAddress = "";
@@ -174,11 +174,11 @@ public class Passenger {
                 }
             }
 
-            System.out.println("\nCLASSIFICATION VERIFIED! The fare discount has been applied to your ticket.\n\nEnter [1] to proceed to route selection.");
+            System.out.println("\nCLASSIFICATION VERIFIED! The fare discount has been applied to your ticket.\n");
 
             int choice2;
             while (true) {
-                System.out.print("[1] Confirm\n[0] Cancel\nEnter choice: ");
+                System.out.print("Enter [1] to proceed to route selection.\n[1] Confirm\n[0] Cancel\nEnter choice: ");
 
                 if (sc.hasNextInt()) {
                     choice2 = sc.nextInt();
@@ -190,10 +190,10 @@ public class Passenger {
                         System.out.println("\nCLASSIFICATION CANCELLED! Restarting classification...");
                         break;
                     } else {
-                        System.out.println("\n*INVALID INPUT!*! Please enter a valid option.");
+                        System.out.println("\n*INVALID INPUT!* Please enter a valid option.\n");
                     }
                 } else {
-                    System.out.println("\n*INVALID INPUT!* Please enter a number only.");
+                    System.out.println("\n*INVALID INPUT!* Please enter a number only.\n");
                     sc.next();
                 }
             }
