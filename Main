@@ -20,7 +20,7 @@ public class Main {
             while (true) {
                 reserve.confirmReservation();
                 System.out.println("\nYour reservation details are provided above.");
-                System.out.println("\nEnter [1] confirm reservation");
+                System.out.println("\nEnter [1] to confirm reservation:");
                 System.out.println("[1] Confirm \n[0] Cancel");
                 System.out.print("Enter Choice: ");
                 
@@ -40,10 +40,10 @@ public class Main {
                             continue; //back to summary
                         }
                     } else {
-                        System.out.println("\nInvalid input. Please enter a valid option.");
+                        System.out.println("\n*INVALID INPUT!* Please enter a valid option.");
                     }
                 } else {
-                    System.out.println("\nInvalid input. Please enter a number only.");
+                    System.out.println("\n*INVALID INPUT!* Please enter a number only.");
                     sc.next();
                 }
             } 
